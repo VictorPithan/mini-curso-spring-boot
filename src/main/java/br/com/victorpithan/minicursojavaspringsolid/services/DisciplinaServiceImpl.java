@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import br.com.victorpithan.minicursojavaspringsolid.dtos.DisciplinaDTO;
 import br.com.victorpithan.minicursojavaspringsolid.models.DisciplinaModel;
 import br.com.victorpithan.minicursojavaspringsolid.repositories.DisciplinaRepository;
+import br.com.victorpithan.minicursojavaspringsolid.services.exceptions.NotFoundException;
 import br.com.victorpithan.minicursojavaspringsolid.services.interfaces.DisciplinaService;
 
 @Service
@@ -24,7 +25,7 @@ public class DisciplinaServiceImpl implements DisciplinaService {
     @Override
     public DisciplinaModel getById(int id) {
         return disciplinaRepository.findById(id)
-                .orElseThrow();
+                .orElseThrow(() -> new NotFoundException("Disciplina não encontrada no banco de dados.", id));
     }
 
     @Override
@@ -49,7 +50,7 @@ public class DisciplinaServiceImpl implements DisciplinaService {
             disciplinaRepository.deleteById(id);
             return true;
         } else {
-            throw new RuntimeException();
+            throw new NotFoundException(id);
         }
     }
 
