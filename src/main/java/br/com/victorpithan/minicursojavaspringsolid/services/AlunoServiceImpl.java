@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import br.com.victorpithan.minicursojavaspringsolid.dtos.AlunoDTO;
 import br.com.victorpithan.minicursojavaspringsolid.models.AlunoModel;
 import br.com.victorpithan.minicursojavaspringsolid.repositories.AlunoRepository;
+import br.com.victorpithan.minicursojavaspringsolid.services.exceptions.NotFoundException;
 import br.com.victorpithan.minicursojavaspringsolid.services.interfaces.AlunoService;
 
 @Service
@@ -27,7 +28,7 @@ public class AlunoServiceImpl implements AlunoService {
 
   @Override
   public AlunoModel getById(int id) {
-   return alunoRepository.findById(id).orElseThrow(null);
+   return alunoRepository.findById(id).orElseThrow(() -> new NotFoundException("Aluno não encontrado.", id));
   }
 
   @Override
@@ -66,7 +67,7 @@ public class AlunoServiceImpl implements AlunoService {
       alunoRepository.deleteById(id);
       return true;
     } else {
-      throw new RuntimeException("Falhou");
+      throw new NotFoundException(id);
     }
   }
 
