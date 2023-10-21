@@ -10,6 +10,7 @@ import br.com.victorpithan.minicursojavaspringsolid.models.AlunoModel;
 import br.com.victorpithan.minicursojavaspringsolid.models.DisciplinaModel;
 import br.com.victorpithan.minicursojavaspringsolid.models.TurmaModel;
 import br.com.victorpithan.minicursojavaspringsolid.repositories.TurmaRepository;
+import br.com.victorpithan.minicursojavaspringsolid.services.exceptions.NotFoundException;
 import br.com.victorpithan.minicursojavaspringsolid.services.interfaces.AlunoService;
 import br.com.victorpithan.minicursojavaspringsolid.services.interfaces.DisciplinaService;
 import br.com.victorpithan.minicursojavaspringsolid.services.interfaces.TurmaService;
@@ -33,7 +34,7 @@ public class TurmaServiceImpl implements TurmaService {
 
     @Override
     public TurmaModel getById(int id) {
-        return turmaRepository.findById(id).orElseThrow();
+        return turmaRepository.findById(id).orElseThrow(() -> new NotFoundException("Turma não encontrada.", 404));
     }
 
     @Override
@@ -64,7 +65,7 @@ public class TurmaServiceImpl implements TurmaService {
             turmaRepository.deleteById(id);
             return true;
         } else {
-            throw new RuntimeException();
+            throw new NotFoundException(id);
         }
     }
 
@@ -88,7 +89,7 @@ public class TurmaServiceImpl implements TurmaService {
         TurmaModel turma = getById(turma_id);
 
         if (!turma.getAlunos().contains(aluno)) {
-            throw new RuntimeException();
+            throw new NotFoundException("Aluno não pertence a turma.", aluno_id);
         }
 
         turma.getAlunos().remove(aluno);
